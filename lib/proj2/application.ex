@@ -14,8 +14,10 @@ defmodule Proj2.Application do
      # _ -> app(1,2)
       #end
     
+        noOfNodes = 100
+        algorihm = "gossip"
       
-          {:ok, pid} =   MySupervisor.start_link([100,"gossip"])
+          {:ok, pid} =   MySupervisor.start_link([noOfNodes,algorihm])
 
     mapChildren()
     IO.inspect (pid)
@@ -25,9 +27,7 @@ defmodule Proj2.Application do
   
   defp mapChildren() do
     task_struct = Enum.map( 1 ..100 , fn x->  Process.whereis(String.to_atom(Integer.to_string(x))) end)
-
-  IO.puts("r")
   IO.inspect (task_struct)
-
   end
+  
 end
