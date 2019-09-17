@@ -14,20 +14,64 @@ defmodule Proj2.Application do
      # _ -> app(1,2)
       #end
     
-        noOfNodes = 100
+        noOfNodes = 200
         algorihm = "gossip"
       
           {:ok, pid} =   MySupervisor.start_link([noOfNodes,algorihm])
 
-    mapChildren()
-    IO.inspect (pid)
+   # mapChildren(noOfNodes)
+    #IO.inspect (pid)
+    full_network(noOfNodes)
+    NodeInfo.initiate_rumor()
+    :timer.sleep(2000);
+   # IO.inspect NodeInfo.get()
+   # Enum.each(1..1,  fn x -> mapChildren(noOfNodes)
+    # :timer.sleep(2000); end )
+    print_convergence_time("h",0)
     {:ok, pid}
     
   end
   
-  defp mapChildren() do
-    task_struct = Enum.map( 1 ..100 , fn x->  Process.whereis(String.to_atom(Integer.to_string(x))) end)
-  IO.inspect (task_struct)
+  defp mapChildren(noOfNodes) do
+     #Enum.map( 1 ..100 , fn x->   Gossip.get(Process.whereis(String.to_atom(Integer.to_string(x) ) )) 
+     # end)
+
+    #IO.inspect Gossip.get(Process.whereis(String.to_atom(Integer.to_string(1) ) ))
+    task_struct = Enum.map( 1 ..noOfNodes  , fn x ->  Process.whereis(String.to_atom(Integer.to_string(x))) end)
+    
+    Enum.each(1..1000,  fn x -> IO.puts length(Enum.filter(task_struct, fn x when x !=nil-> Process.alive?(x) end ))
+     :timer.sleep(50); end )
+    
+
+
+    #IO.inspect task_struct
   end
   
+  defp full_network(noOfNodes) do
+    task_struct = Enum.map( 1 ..noOfNodes , fn x->  Process.whereis(String.to_atom(Integer.to_string(x))) end)
+    
+    Enum.each(task_struct, fn x -> Gossip.set_neigbours(x, task_struct -- [x]) 
+ # IO.inspect(Gossip.get(x)) end)
+end)
+  end
+   # Gossip.recieveRumour(Enum.at(task_struct,1), "r")
+  def print_convergence_time(msg, n) when n >= 1 do
+    IO.puts msg
+  end
+
+  def print_convergence_time(msg,n) do
+    {numOfNodes,start_time,list} = NodeInfo.get() 
+    if  length(list) >= 0.7 * numOfNodes do
+
+      print_convergence_time(Enum.at(list,length(list) -1 ) - start_time,1)
+    else
+      IO.puts length(list)
+      IO.inspect NodeInfo.get() 
+      print_convergence_time(msg,0)
+    end   
+  end
+
+
+  
+
 end

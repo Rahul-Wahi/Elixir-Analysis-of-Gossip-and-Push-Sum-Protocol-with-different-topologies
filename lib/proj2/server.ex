@@ -18,18 +18,40 @@ def set(pid) do
   GenServer.call(pid, :set, :infinity)
 end
 
+def set_neigbours(pid, arg) do  
+  GenServer.cast(pid, {:set_neigbours,arg})
+end
+
 def recieveRumour(pid, arg) do
   GenServer.cast(pid, {:recieveRumour,arg})
 end
 
+#to add neighbours to the existing list
+def handle_cast({:set_neigbours,arg} ,%{neighbours: name} = state) do
+
+  
+  {:noreply,%{state | neighbours: name ++ arg}  }
+  
+end
+
+
+
+
 def handle_cast({:recieveRumour,arg} ,%{neighbours: name, rumour: value1, counter: value2} = state) do
 
+    name = Enum.filter(name, fn x -> Process.alive?(x) end)
+    if length(name) == 0 do
+      NodeInfo.done();
+      {:stop, :normal, %{state | rumour: arg, counter: value2 + 1}} 
+    else
     neighbour = Enum.random(name)  #handle for empty list
-    GenServer.cast(neighbour, {:recieveRumour,value1})
+    GenServer.cast(neighbour, {:recieveRumour,arg})
+  end
     if value2+1 < 10 do
     {:noreply,%{state | rumour: arg, counter: value2 + 1}  }
     else
-      {:stop, "", %{state | rumour: arg, counter: value2 + 1}} 
+      NodeInfo.done();
+      {:stop, :normal, %{state | rumour: arg, counter: value2 + 1}} 
   end
 
 end
