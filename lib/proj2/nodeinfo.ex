@@ -11,8 +11,8 @@ defmodule NodeInfo do
     def get() do  
         GenServer.call(__MODULE__, :get, :infinity)
       end
-    def initiate_rumor() do
-        GenServer.cast(__MODULE__, :intitiate_rumor)
+    def initiate_algorithm(algorithm) do
+        GenServer.cast(__MODULE__, {:initiate_algorithm,algorithm})
     end
 
     def done do
@@ -21,9 +21,13 @@ defmodule NodeInfo do
     end
 
     #intitate rumour for "1" process
-    def handle_cast(:intitiate_rumor, {numOfNodes,start_time,_list}) do
+    def handle_cast({:initiate_algorithm,algorithm}, {numOfNodes,_start_time,_list}) do
         start_time = System.monotonic_time(:millisecond)
+        if String.contains?(algorithm,"gossip") do
         Gossip.recieveRumour(Process.whereis(String.to_atom("1")), "rumor")
+        else
+            PushSum.recieve_sumpair(Process.whereis(String.to_atom("1")), 0,0)
+        end
         {:noreply, {numOfNodes,start_time,[]} }
     end
 
@@ -43,7 +47,7 @@ defmodule NodeInfo do
     end
   
 
-    def handle_call(:get,_from,{numOfNodes,start_time,list}=state) do
+    def handle_call(:get,_from,{_numOfNodes,_start_time,_list}=state) do
         #IO.puts (Enum.at(list,length(list) -1 ) - start_time)
         {:reply, state,state}
     end

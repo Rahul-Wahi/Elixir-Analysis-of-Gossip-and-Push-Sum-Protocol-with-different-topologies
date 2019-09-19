@@ -15,14 +15,14 @@ defmodule Proj2.Application do
       #end
     
         noOfNodes = 200
-        algorihm = "gossip"
+        algorihm = "gossip1"
       
           {:ok, pid} =   MySupervisor.start_link([noOfNodes,algorihm])
 
    # mapChildren(noOfNodes)
     #IO.inspect (pid)
-    full_network(noOfNodes)
-    NodeInfo.initiate_rumor()
+    full_network(noOfNodes,algorihm)
+    NodeInfo.initiate_algorithm(algorihm)
     :timer.sleep(2000);
    # IO.inspect NodeInfo.get()
    # Enum.each(1..1,  fn x -> mapChildren(noOfNodes)
@@ -47,12 +47,18 @@ defmodule Proj2.Application do
     #IO.inspect task_struct
   end
   
-  defp full_network(noOfNodes) do
+  defp full_network(noOfNodes, algorithm) do
+
     task_struct = Enum.map( 1 ..noOfNodes , fn x->  Process.whereis(String.to_atom(Integer.to_string(x))) end)
-    
+    if String.contains?(algorithm,"gossip") do
     Enum.each(task_struct, fn x -> Gossip.set_neigbours(x, task_struct -- [x]) 
  # IO.inspect(Gossip.get(x)) end)
-end)
+      end)
+  else
+    Enum.each(task_struct, fn x -> PushSum.set_neigbours(x, task_struct -- [x]) 
+    # IO.inspect(Gossip.get(x)) end)
+         end)
+    end
   end
    # Gossip.recieveRumour(Enum.at(task_struct,1), "r")
   def print_convergence_time(msg, n) when n >= 1 do

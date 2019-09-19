@@ -122,7 +122,7 @@ defmodule PushSum  do
      new_ratio = s/w
 
     
-      c =  c + compare_sw_ratio(old_ratio, new_ratio)
+      c =   compare_sw_ratio(old_ratio, new_ratio, c)
      
 
      
@@ -158,9 +158,9 @@ defmodule PushSum  do
    {:reply,state, [] , 100000}
  end
  
- defp compare_sw_ratio(old_ratio, new_ratio) do
+ defp compare_sw_ratio(old_ratio, new_ratio,c) do
   if abs(new_ratio - old_ratio) < :math.pow(10,-10) do
-    1
+    c+1
   else
     0
    end
