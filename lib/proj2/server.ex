@@ -39,26 +39,18 @@ end
 
 def handle_cast({:recieveRumour,arg} ,%{neighbours: name, rumour: _value1, counter: value2} = state) do
 
-    name = Enum.filter(name, fn x -> Process.alive?(x) end)
-    if length(name) == 0 do
-      NodeInfo.done()
+    if length(name) == 0 or value2+1 >= 10 do
+      NodeInfo.done( System.monotonic_time(:millisecond) )
       {:stop, :normal, %{state | rumour: arg, counter: value2 + 1}} 
     else
     neighbour = Enum.random(name)  #handle for empty list
     GenServer.cast(neighbour, {:recieveRumour,arg})
-  end
-    if value2+1 < 10 do
-    {:noreply,%{state | rumour: arg, counter: value2 + 1}  }
-    else
-      NodeInfo.done()
-      {:stop, :normal, %{state | rumour: arg, counter: value2 + 1}} 
-  end
+    {:noreply, %{state |  rumour: arg, counter: value2 + 1}} 
+     end
 
 end
 
-def handle_cast({:onneighbourterminate,pid}, %{neighbours: name} = state ) do
-  {:noreply,Map.put(state, :neighbours, List.delete( name, pid))  }
-end
+
 
 def handle_call(:get, _from, state) do
   {:reply,state, state , 100000}
@@ -67,9 +59,6 @@ end
 def handle_call(:set, _from, state) do
   {:reply,state, [] , 100000}
 end
-
-
-
 
 
 end
@@ -127,20 +116,14 @@ defmodule PushSum  do
 
      
 
-     if length(name) == 0 do
-       NodeInfo.done()
+     if length(name) == 0 or c > 3 do
+       NodeInfo.done(System.monotonic_time(:millisecond))
        {:stop, :normal, %{state | sum: s , weight: w , counter: c}} 
      else
      neighbour = Enum.random(name)  #handle for empty list
      GenServer.cast(neighbour, {:recieve_sumpair,s/2, w/2})
-     end
-
-     if c < 3 do
      {:noreply,%{state | sum: s/2 , weight: w/2 , counter: c}  }
-     else
-       NodeInfo.done();
-       {:stop, :normal, %{state | sum: s/2 , weight: w/2 , counter: c}} 
-       
+
    end
  
  end

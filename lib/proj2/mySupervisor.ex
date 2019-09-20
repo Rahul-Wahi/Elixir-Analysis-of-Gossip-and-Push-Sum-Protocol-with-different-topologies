@@ -21,7 +21,7 @@ defmodule MySupervisor do
 
     end)
 
-    children = children ++ [worker(NodeInfo , [arg1] , [id: NodeInfo, restart: :transient, shutdown: :infinity])]
+    children = children ++ [worker(NodeInfo , [] , [id: NodeInfo, restart: :transient, shutdown: :infinity])]
 
     supervise(children, strategy: :one_for_one)
   
