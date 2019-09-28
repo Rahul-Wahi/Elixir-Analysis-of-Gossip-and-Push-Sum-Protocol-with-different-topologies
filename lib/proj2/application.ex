@@ -15,7 +15,7 @@ defmodule Proj2.Application do
       #end
     
         noOfNodes = 1000
-        algorihm = "gossip1"
+        algorihm = "gossip"
       
           {:ok, pid} =   MySupervisor.start_link([noOfNodes,algorihm])
 
