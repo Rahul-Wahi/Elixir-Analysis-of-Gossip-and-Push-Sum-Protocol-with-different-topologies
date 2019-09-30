@@ -14,17 +14,21 @@ defmodule Proj2.Application do
      # _ -> app(1,2)
       #end
     
-        noOfNodes = 27
+        noOfNodes = 1000
         algorihm = "gossip"
       
           {:ok, pid} =   MySupervisor.start_link([noOfNodes,algorihm])
 
    
-    #full_network(noOfNodes,algorihm)
-    threeDtorus_network(noOfNodes,algorihm)
+    full_network(noOfNodes,algorihm)
+    #threeDtorus_network(noOfNodes,algorihm)
+    
+
     NodeInfo.initiate_algorithm(algorihm)
     
     print_convergence_time("anyvalue",0)
+   
+
     {:ok, pid}
     
   end
@@ -56,7 +60,8 @@ defmodule Proj2.Application do
       
            end)
       end
-      Enum.each(task_struct, fn x -> IO.inspect Gossip.get(x) end ) 
+      #Enum.each(task_struct, fn x -> IO.inspect(x)
+       #IO.inspect Gossip.get(x) end ) 
 
   end
 
@@ -71,7 +76,7 @@ defmodule Proj2.Application do
     neighbour5 = Enum.at( task_struct , fifth_neighbour_3d(node_number, grid_length) -1 )
     neighbour6 = Enum.at( task_struct , sixth_neighbour_3d(node_number, grid_length) -1 )
 
-    list_neighbours = [neighbour1 , neighbour2 , neighbour3, neighbour4, neighbour5, neighbour6]
+    _list_neighbours = [neighbour1 , neighbour2 , neighbour3, neighbour4, neighbour5, neighbour6]
     
   end
 
@@ -110,7 +115,7 @@ defmodule Proj2.Application do
     if rem( node_number - 1 , grid_length ) == 0 do
       node_number - 1 +  grid_length
     else
-      node_number = node_number - 1 
+      node_number - 1 
     end
     
   end 
@@ -142,8 +147,8 @@ defmodule Proj2.Application do
   end
 
   def print_convergence_time(msg,n) do
-    {end_time,start_time} = NodeInfo.get() 
-    
+    {end_time,start_time,_list_of_nodes} = NodeInfo.get() 
+   # IO.inspect NodeInfo.get()
     if  end_time > 0 do
       print_convergence_time(end_time - start_time,1)
     else
