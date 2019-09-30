@@ -124,6 +124,35 @@ defmodule PushSum  do
    GenServer.cast(pid, {:recieve_sumpair,s,w})
  end
  
+ defp schedule_work() do
+  Process.send_after(self(), :work, 50)
+end
+
+
+
+def handle_info(:work, %{neighbours: name, sum: s, weight: w, counter: c} = state) do
+  # do important stuff
+  #IO.puts "Important stuff in progress...work"
+  #IO.puts value2
+  name = Enum.filter(name, fn x -> x != nil end)
+  name = Enum.filter(name, fn x -> Process.alive?(x) end)
+  #IO.inspect self()
+  if length(name) !=0 do
+    neighbour = Enum.random(name)  #handle for empty list
+    #IO.inspect self()
+    #IO.inspect state
+    GenServer.cast(neighbour, {:recieve_sumpair,s/2, w/2})
+    schedule_work()
+    {:noreply,%{state | sum: s/2 , weight: w/2 , counter: c}  }
+
+  else
+    NodeInfo.done( self() )
+    {:stop, :normal, %{state | sum: s , weight: w , counter: c}} 
+  end
+  
+end
+
+
  #to add neighbours to the existing list
  def handle_cast({:set_neigbours,arg} ,%{neighbours: name} = state) do
  
@@ -137,6 +166,10 @@ defmodule PushSum  do
  #Push Sum receive and send logic
  def handle_cast({:recieve_sumpair,received_sum,received_weight} ,%{neighbours: name, sum: s, weight: w, counter: c} = state) do
  
+     if w == 1 do
+      NodeInfo.infected( self() )
+     end 
+     name = Enum.filter(name, fn x -> x != nil end) 
      name = Enum.filter(name, fn x -> Process.alive?(x) end)
      old_ratio = s/w
      s = s + received_sum
@@ -153,8 +186,9 @@ defmodule PushSum  do
        NodeInfo.done(System.monotonic_time(:millisecond))
        {:stop, :normal, %{state | sum: s , weight: w , counter: c}} 
      else
-     neighbour = Enum.random(name)  #handle for empty list
-     GenServer.cast(neighbour, {:recieve_sumpair,s/2, w/2})
+     #neighbour = Enum.random(name)  #handle for empty list
+     #GenServer.cast(neighbour, {:recieve_sumpair,s/2, w/2})
+     schedule_work()
      {:noreply,%{state | sum: s/2 , weight: w/2 , counter: c}  }
 
    end
