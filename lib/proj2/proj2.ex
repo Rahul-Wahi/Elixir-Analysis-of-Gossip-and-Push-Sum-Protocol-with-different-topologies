@@ -92,7 +92,7 @@ defmodule Proj2.GossipPushSum do
   def print_convergence_time(msg,n) do
     {end_time,start_time,_list_of_nodes} = NodeInfo.get() 
    # IO.inspect NodeInfo.get()
-    if  end_time > 0 do
+    if  end_time != 0 do
       print_convergence_time(end_time - start_time,1)
     else
        print_convergence_time(msg,n)
