@@ -22,6 +22,11 @@ def set_neigbours(pid, arg) do
   GenServer.cast(pid, {:set_neigbours,arg})
 end
 
+def kill(pid) do
+  GenServer.call(pid, :kill, :infinity)
+end
+
+
 
 defp schedule_work() do
   Process.send_after(self(), :work, 50)
@@ -94,6 +99,12 @@ def handle_call(:set, _from, state) do
   {:reply,state, [] , 100000}
 end
 
+def handle_call(:kill, _from, state) do
+  {:stop,:normal, state , 100000}
+end
+
+
+
 
 end
 
@@ -129,6 +140,9 @@ defmodule PushSum  do
   Process.send_after(self(), :work, 50)
 end
 
+def kill(pid) do
+  GenServer.call(pid, :kill, :infinity)
+end
 
 
 def handle_info(:work, %{neighbours: name, sum: s, weight: w, counter: c} = state) do
@@ -220,6 +234,10 @@ end
 
  def handle_call(:reset, _from, state) do
   {:reply,state, [] , 100000}
+end
+
+def handle_call(:kill, _from, state) do
+  {:stop,:normal, state , 100000}
 end
  
  defp compare_sw_ratio(old_ratio, new_ratio,c) do
