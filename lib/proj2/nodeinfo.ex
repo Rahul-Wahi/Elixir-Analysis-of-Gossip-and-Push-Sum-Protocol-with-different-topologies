@@ -43,7 +43,8 @@ defmodule NodeInfo do
             #IO.puts end_time
             {:noreply, {end_time,start_time, list_of_infectedNodes}}
         else
-           # IO.puts length(list_of_infectedNodes)
+            
+            #IO.puts length(list_of_infectedNodes)
             #IO.inspect list_of_infectedNodes
             #IO.inspect Gossip.get(Enum.at(list_of_infectedNodes,0))
         schedule_work()

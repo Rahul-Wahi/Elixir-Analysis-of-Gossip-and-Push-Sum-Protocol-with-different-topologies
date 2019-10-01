@@ -18,13 +18,17 @@ defmodule Proj2.GossipPushSum do
       #end
     
         noOfNodes = String.to_integer(noOfNodes)
+       #failure_percentage = String.to_integer(failure_percentage)
+        #noOfFailedNodes = trunc(failure_percentage*noOfNodes/100)
         #algorihm = "gossip"
         #topology = "line"
         
         {:ok, _pid} =   MySupervisor.start_link([noOfNodes,algorihm])
 
 
-   
+      #no_of_nodes = [30, 50, 100,500, 1000,1500, 2000,2500, 3000, 3500, 4000, 4500, 5000]
+    
+
     #Topologies.full_network(noOfNodes,algorihm)
     #threeDtorus_network(noOfNodes,algorihm)
     if check_args(noOfNodes, topology, algorihm ) == true do
@@ -68,13 +72,11 @@ defmodule Proj2.GossipPushSum do
       "line" -> Topologies.line_network(noOfNodes,algorihm)
       "rand2D" -> Topologies.random2D_network(noOfNodes,algorihm)
       "3Dtorus" -> 
-        if(noOfNodes < 27) do
-          IO.puts ("For 3Dtorus minimum no. of nodes should be 27, please re run with correct value")
-        else
-        gridLength = trunc( :math.pow(noOfNodes,1/3) )
+        
+        gridLength = trunc( ceil(:math.pow(noOfNodes,1/3) ) )
         noOfNodes = gridLength*gridLength*gridLength 
         Topologies.threeDtorus_network(noOfNodes,algorihm)
-        end
+        
       "honeycomb" -> Topologies.honeycomb_network(noOfNodes,algorihm)
       "randhoneycomb" -> Topologies.hcrand_network(noOfNodes,algorihm)
       

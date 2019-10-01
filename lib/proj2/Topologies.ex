@@ -57,7 +57,7 @@ defmodule Topologies do
       #will return the list of neighboours for specified node_number
       defp find_3dtorus_neighbours(task_struct, noOfNodes, node_number) do
       
-        grid_length = trunc( :math.pow(noOfNodes,1/3) );
+        grid_length = trunc( Float.ceil( :math.pow(noOfNodes,1/3) ) );
         neighbour1 = Enum.at( task_struct , first_neighbour_3d(node_number, grid_length) -1 )
         neighbour2 = Enum.at( task_struct , second_neighbour_3d(node_number, grid_length) -1 )
         neighbour3 = Enum.at( task_struct , third_neighbour_3d(node_number, grid_length) - 1 )
@@ -214,7 +214,7 @@ defmodule Topologies do
       end
     
       def hcrand_network(noOfNodes,algorithm) do
-        noAxisPts = ceil(:math.sqrt(noOfNodes)) # such that pow(noAxisPts, 2) >= noOfNodes
+        noAxisPts =  ceil(:math.sqrt(noOfNodes))  # such that pow(noAxisPts, 2) >= noOfNodes
         cartesian_product = for i <- 0..noAxisPts, j <- 0..noAxisPts, do: {j, i} # get [{0,0}, {1,0}, {2,0}, .., {0,1}, {1,1}, ..]
         task_struct = Enum.map(1..noOfNodes, fn x -> Process.whereis(String.to_atom(Integer.to_string(x))) end)
     

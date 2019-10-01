@@ -65,10 +65,11 @@ end
 
 def handle_cast({:recieveRumour,arg} ,%{neighbours: name, rumour: _value1, counter: value2} = state) do
 
-    name = Enum.filter(name, fn x -> x != nil end)
-    name = Enum.filter(name, fn x -> Process.alive?(x) end)
+    #name = Enum.filter(name, fn x -> x != nil end)
+    #name = Enum.filter(name, fn x -> Process.alive?(x) end)
     if value2 == 0 do
       NodeInfo.infected( self() )
+      schedule_work()
     end 
     if length(name) == 0 or value2+1 >= 10 do
      # NodeInfo.done( System.monotonic_time(:millisecond) )
@@ -77,7 +78,7 @@ def handle_cast({:recieveRumour,arg} ,%{neighbours: name, rumour: _value1, count
     else
     #neighbour = Enum.random(name)  #handle for empty list
     #GenServer.cast(neighbour, {:recieveRumour,arg})
-    schedule_work()
+    
     {:noreply, %{state |  rumour: arg, counter: value2 + 1}} 
      end
 
@@ -141,7 +142,9 @@ def handle_info(:work, %{neighbours: name, sum: s, weight: w, counter: c} = stat
   if length(name) !=0 do
     neighbour = Enum.random(name)  #handle for empty list
     #IO.inspect self()
-   # IO.inspect state
+  #  if c > 0 do
+    #IO.inspect state
+   # end
     GenServer.cast(neighbour, {:recieve_sumpair,s/2, w/2})
     schedule_work()
     {:noreply,%{state | sum: s/2 , weight: w/2 , counter: c}  }
@@ -169,6 +172,8 @@ end
  
      if w == 1 do
       NodeInfo.infected( self() )
+      schedule_work()
+
      end 
      name = Enum.filter(name, fn x -> x != nil end) 
      name = Enum.filter(name, fn x -> Process.alive?(x) end)
@@ -180,6 +185,10 @@ end
     
       c =   compare_sw_ratio(old_ratio, new_ratio, c)
      
+      if c > 0 do
+       # IO.puts "hahahah"
+        #IO.puts c
+      end
 
      
 
@@ -189,8 +198,8 @@ end
      else
      #neighbour = Enum.random(name)  #handle for empty list
      #GenServer.cast(neighbour, {:recieve_sumpair,s/2, w/2})
-     schedule_work()
-     {:noreply,%{state | sum: s/2 , weight: w/2 , counter: c}  }
+     #schedule_work()
+     {:noreply,%{state | sum: s , weight: w , counter: c}  }
 
    end
  
