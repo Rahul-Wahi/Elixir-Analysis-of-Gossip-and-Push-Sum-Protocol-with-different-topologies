@@ -133,14 +133,15 @@ end
 def handle_info(:work, %{neighbours: name, sum: s, weight: w, counter: c} = state) do
   # do important stuff
   #IO.puts "Important stuff in progress...work"
-  #IO.puts value2
+  #IO.puts s/w
+  #IO.puts c
   name = Enum.filter(name, fn x -> x != nil end)
   name = Enum.filter(name, fn x -> Process.alive?(x) end)
   #IO.inspect self()
   if length(name) !=0 do
     neighbour = Enum.random(name)  #handle for empty list
     #IO.inspect self()
-    #IO.inspect state
+   # IO.inspect state
     GenServer.cast(neighbour, {:recieve_sumpair,s/2, w/2})
     schedule_work()
     {:noreply,%{state | sum: s/2 , weight: w/2 , counter: c}  }
@@ -182,7 +183,7 @@ end
 
      
 
-     if length(name) == 0 or c > 3 do
+     if length(name) == 0 or c >= 3 do
        NodeInfo.done(System.monotonic_time(:millisecond))
        {:stop, :normal, %{state | sum: s , weight: w , counter: c}} 
      else
@@ -207,9 +208,13 @@ end
  def handle_call(:set, _from, state) do
    {:reply,state, [] , 100000}
  end
+
+ def handle_call(:reset, _from, state) do
+  {:reply,state, [] , 100000}
+end
  
  defp compare_sw_ratio(old_ratio, new_ratio,c) do
-  if abs(new_ratio - old_ratio) < :math.pow(10,-10) do
+  if abs(new_ratio - old_ratio) <= :math.pow(10,-10) do
     c+1
   else
     0
