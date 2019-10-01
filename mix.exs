@@ -6,18 +6,28 @@ defmodule Proj2.MixProject do
       app: :proj2,
       version: "0.1.0",
       elixir: "~> 1.9",
-      start_permanent: Mix.env() == :prod,
-      deps: deps()
+      #start_permanent: Mix.env() == :prod,
+      build_embedded: Mix.env == :prod,
+     start_permanent: Mix.env == :prod,
+      deps: deps(),
+      #build_embedded: Mix.env == :prod,
+      escript: escript()
     ]
   end
 
   # Run "mix help compile.app" to learn about applications.
-  def application do
-    [
-      extra_applications: [:logger],
-      mod: {Proj2.Application, []}
-    ]
+  #def application do
+   # [
+      #Application.start(Proj2.Application),
+      #extra_applications: [:logger],
+      #mod: {Proj2.Application, []}
+    #]
+  #end
+
+  def escript do
+    [main_module: Proj2.GossipPushSum]
   end
+
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
