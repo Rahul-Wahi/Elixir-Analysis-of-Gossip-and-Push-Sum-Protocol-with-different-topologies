@@ -23,7 +23,7 @@ For Windows
 >>> escript proj2 numOfNodes algorithm
 
 __Output__:-  
-'''Convergence time'''
+Convergence time
 
 *************************************************************************************************
 2. **For Bonus:**  
@@ -40,8 +40,8 @@ For Windows
 >>>  escript proj2 numOfNodes algorithm percentageFailure  
   
 __Output__:-
-'''Convergence time
-Number of Unreached Nodes'''
+Convergence time  
+Number of Unreached Nodes
 
 *************************************************************************************************
 3. **What is working?**
