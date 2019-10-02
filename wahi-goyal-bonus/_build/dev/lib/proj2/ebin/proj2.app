@@ -1,0 +1,9 @@
+{application,proj2,
+             [{applications,[kernel,stdlib,elixir]},
+              {description,"proj2"},
+              {modules,['Elixir.Gossip','Elixir.MySupervisor',
+                        'Elixir.NodeInfo','Elixir.Proj2',
+                        'Elixir.Proj2.GossipPushSum','Elixir.PushSum',
+                        'Elixir.Topologies']},
+              {registered,[]},
+              {vsn,"0.1.0"}]}.
