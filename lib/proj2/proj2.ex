@@ -28,7 +28,7 @@ defmodule Proj2.GossipPushSum do
 
       #no_of_nodes = [30, 50, 100,500, 1000,1500, 2000,2500, 3000, 3500, 4000, 4500, 5000]
     
-
+      task_struct = Enum.map( 1..noOfNodes, fn x -> Process.whereis(String.to_atom(Integer.to_string(x))) end ) 
     #Topologies.full_network(noOfNodes,algorithm)
     #threeDtorus_network(noOfNodes,algorithm)
     if check_args(noOfNodes, topology, algorithm ) == true do
@@ -38,11 +38,18 @@ defmodule Proj2.GossipPushSum do
     
     print_convergence_time("anyvalue",0)
     end
-
+    find_active(task_struct)
     #{:ok, pid}
     
   end
   
+  defp find_active(task_struct) do
+
+    task_struct = Enum.filter(task_struct, fn x -> x != nil end)
+    task_struct = Enum.filter(task_struct, fn x -> Process.alive?(x) end)
+    IO.puts length(task_struct)
+  end
+
   defp kill_random_nodes(noOfNodes,noOfFailedNodes, algorithm) do
      Enum.map( 2..noOfNodes, fn x -> Process.whereis(String.to_atom(Integer.to_string(x))) end ) 
      |>  Enum.take_random(noOfFailedNodes) 
