@@ -71,4 +71,4 @@ For Push-Sum, Largest Network for topologies
 - randhoneycomb = 10000 (Convergence time 12.4 secs)  
   
   
-*Additional details about the analysis can be found in **report.pdf** * 
+*Additional details about the analysis can be found in* **report.pdf**
