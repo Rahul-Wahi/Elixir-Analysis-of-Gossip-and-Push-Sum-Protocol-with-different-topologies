@@ -1,59 +1,59 @@
 # Proj2
 
-NAME 1: Rahul Wahi
-UFID: 3053-6162
-
-NAME 2: Wins Goyal
-UFID: 7357-1559
-
+NAME 1: Rahul Wahi  
+UFID: 3053-6162  
+  
+NAME 2: Wins Goyal  
+UFID: 7357-1559  
+  
 *************************************************************************************************************************
 1. **STEPS to run the code**
- 
-<u>step1:</u> Unzip the file and enter in the "proj2" folder through terminal **($cd proj2)** or where <i>mix.exs</i> file is present.
+   
+__step1:__ Unzip the file and enter in the "proj2" folder through terminal **($cd proj2)** or where *mix.exs* file is present.  
+  
+If needed to build the script again, then run  
+>>> mix escript.build
+  
+__step2:__ Run the the following command to execute the file.  
+  
+For Linux  
+>>> ./proj2 numOfNodes topology algorithm
 
-If needed to build the script again, then run
->>>mix escript.build
+For Windows  
+>>> escript proj2 numOfNodes algorithm
 
-<u>step2:</u> Run the the following command to execute the file.
-
-For Linux
->>>./proj2 numOfNodes topology algorithm
-
-For Windows
->>>escript proj2 numOfNodes algorithm
-
-<u>Output</u>:-
-Convergence time
+__Output__:-  
+'''Convergence time'''
 
 *************************************************************************************************
-2. **For Bonus:**
+2. **For Bonus:**  
+   
+__step1:__ Unzip the bonus file and enter into the folder where *mix.exs* file is present.  
+  
+If needed to build the script again, then run  
+>>> mix escript.build  
 
-<u>step1:</u> Unzip the bonus file and enter into the folder where <i>mix.exs</i> file is present.
-
-If needed to build the script again, then run
->>>mix escript.build
-
-For Linux
->>>./proj2 numOfNodes topology algorithm percentageFailure
-
-For Windows
->>>escript proj2 numOfNodes algorithm percentageFailure
-
-<u>Output</u>:-
-Convergence time
-Number of Unreached Nodes
+For Linux  
+>>> ./proj2 numOfNodes topology algorithm percentageFailure  
+  
+For Windows  
+>>>  escript proj2 numOfNodes algorithm percentageFailure  
+  
+__Output__:-
+'''Convergence time
+Number of Unreached Nodes'''
 
 *************************************************************************************************
 3. **What is working?**
-
----> Program is working for all the topologies for both algorithms
-
-System Configuration: 8GB RAM, i5
+  
+- Program is working for all the topologies for both algorithms
+  
+- System Configuration: 8GB RAM, i5
 Maximum numbers of nodes for each topologies vary based on the System's configuration and its computational resources.
 
 *************************************************************************************************
 4. **Gossip and Push-Sum, Max. nodes computed for convergence**
-
+  
 For Gossip, Largest Network for topologies  
 full = 8000 (Convergence time 64 secs, for more than 8000 getting memory overflow error)  
 line =  10000 (Covergence time too high)  
